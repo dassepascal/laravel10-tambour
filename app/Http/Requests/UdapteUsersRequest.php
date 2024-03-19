@@ -8,10 +8,8 @@ class UpdateUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
-     *
-     * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
@@ -19,17 +17,15 @@ class UpdateUserRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules()
+    public function rules(): array
     {
-        // Let's get the route param by name to get the User object value
-        $user = request()->route('user');
-
         return [
-            'name' => 'required',
-            'email' => 'required|email:rfc,dns|unique:users,email,'.$user->id,
-            'username' => 'required|unique:users,username,'.$user->id,
+            'name' => 'required|string|max:250',
+            'email' => 'required|string|email:rfc,dns|max:250|unique:users,email,'.$this->user->id,
+            'password' => 'nullable|string|min:8|confirmed',
+            'roles' => 'required'
         ];
     }
 }
